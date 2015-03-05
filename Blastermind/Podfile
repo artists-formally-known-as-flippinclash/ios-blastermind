@@ -2,6 +2,7 @@
 # platform :ios, '6.0'
 
 pod 'libPusher', '~> 1.5'
+pod "PusherSwift"
 
 target 'Blastermind' do
 
