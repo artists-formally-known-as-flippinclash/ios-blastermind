@@ -19,3 +19,6 @@ DerivedData
 
 # Finder droppings
 .DS_Store
+
+# editor crud
+*.swp

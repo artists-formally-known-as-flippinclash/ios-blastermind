@@ -1,0 +1,13 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+pod 'libPusher', '~> 1.5'
+
+target 'Blastermind' do
+
+end
+
+target 'BlastermindTests' do
+
+end
+
