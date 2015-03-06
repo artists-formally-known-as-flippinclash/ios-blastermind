@@ -20,6 +20,7 @@
 		B8724F4D1AA96F3200C5560A /* BoardScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B8724F4C1AA96F3200C5560A /* BoardScene.sks */; };
 		B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F4E1AA96FA600C5560A /* BoardScene.swift */; };
 		B8724F511AA9887000C5560A /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F501AA9887000C5560A /* GameModels.swift */; };
+		B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		B8724F4C1AA96F3200C5560A /* BoardScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BoardScene.sks; sourceTree = "<group>"; };
 		B8724F4E1AA96FA600C5560A /* BoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardScene.swift; sourceTree = "<group>"; };
 		B8724F501AA9887000C5560A /* GameModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
+		B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardLayout.swift; sourceTree = "<group>"; };
 		EC7CCB13DBCF8EB2443C3B9C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				B8724F4E1AA96FA600C5560A /* BoardScene.swift */,
 				B8390C9D1AA8F3DF007A3111 /* GameViewController.swift */,
 				B8724F501AA9887000C5560A /* GameModels.swift */,
+				B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */,
 				B8390C9F1AA8F3DF007A3111 /* Main.storyboard */,
 				B8390CA21AA8F3DF007A3111 /* Images.xcassets */,
 				B8390CA41AA8F3DF007A3111 /* LaunchScreen.xib */,
@@ -297,6 +300,7 @@
 				B8724F511AA9887000C5560A /* GameModels.swift in Sources */,
 				B8390C9E1AA8F3DF007A3111 /* GameViewController.swift in Sources */,
 				B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */,
+				B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */,
 				B8390CBC1AA90441007A3111 /* Server.swift in Sources */,
 				B8390C981AA8F3DE007A3111 /* AppDelegate.swift in Sources */,
 			);

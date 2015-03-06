@@ -8,40 +8,160 @@
 
 import SpriteKit
 
+func prettyColor<T>(instance: T) -> UIColor {
+    var address = unsafeBitCast(instance, Int.self)
+    let red =   CGFloat(address >> 0 & 0xFF) / 255.0
+    let green = CGFloat(address >> 8 & 0xFF) / 255.0
+    let blue =  CGFloat(address >> 16 & 0xFF) / 255.0
+
+    let derivedColor = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+    return derivedColor
+}
+
+let defaultColors = [1: UIColor.redColor(), 2: UIColor.orangeColor(),
+                     3: UIColor.blueColor(), 4: UIColor.whiteColor(),
+                     5: UIColor.greenColor(), 6: UIColor.cyanColor()]
+
+
 let pegPrefix = "peg"
 
 class BoardScene: SKScene {
-    var guessWidth = 4
-    var maxGuesses = 10
+    var boardLayout: BoardLayout? // REALLY NOT SWIFTY
+    var pegTypes: [PegType] = [] // not Swifty but SHIPIT
 
-    var currentGuessRow = 0
-    var nextIndexInGuess = 0
+    var currentGuessRow = 1
+    var nextIndexInGuess = 1
 
     var currentRoundStatus = RoundStatus.Waiting
 
     override func didMoveToView(view: SKView) {
-        println("board scene")
-    }
+        self.scaleMode = SKSceneScaleMode.ResizeFill
 
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        for touch in touches as! Set<UITouch> {
-            // extend SKScene with this instead? JQuery style lookup?
-            var location = touch.locationInView(self.view)
-            let touchedNode = self.nodeAtPoint(location)
-            if let name = touchedNode.name where startsWith(name, pegPrefix) {
-                // change this peg to selected state
-                let newPeg = touchedNode.copy() as! SKSpriteNode
-                newPeg.name = "userPeg"
-                newPeg.position = CGPoint(x: touchedNode.position.x - 10.0, y: touchedNode.position.y + 40.0)
-                self.addChild(newPeg)
+        println("board scene")
+        for node in self.children {
+            if let thisNode = node as? SKSpriteNode,
+                let nodeName = thisNode.name where startsWith(nodeName, pegPrefix) {
+                thisNode.userInteractionEnabled = true
             }
         }
+
+        if boardLayout == nil { return }
+        let actualLayout = boardLayout!
+
+        pegTypes = pegTypesForLayout(actualLayout)
+
+        let pegNodes = pegTypes.map {
+            (pegType: PegType) -> PegNode in
+            var aNewNode = PegNode(color: UIColor.orangeColor(), size: pegType.pegSize)
+            aNewNode.color = prettyColor(aNewNode)
+            aNewNode.pegColor = aNewNode.color // shouldn't need to set both colors
+            aNewNode.userInteractionEnabled = true
+            aNewNode.name = pegType.pegName
+            let newXPosition = self.positionForIndex(pegType.pegIndex, segmentWidth: actualLayout.segmentWidth)
+            let newYPosition = self.yPositionForBinSegmentsWithWidth(actualLayout.segmentWidth)
+            aNewNode.position = CGPoint(x: newXPosition, y: newYPosition)
+
+            self.addChild(aNewNode)
+            return aNewNode
+        }
     }
+
+    // MARK: Interact with Board for guesses
+
+    // convenience version
+    func fillInNextGuessPeg(pegNode: PegNode) {
+        self.fillInGuessPeg(self.currentGuessRow, codeIndex: self.nextIndexInGuess, pegNode: pegNode)
+    }
+
+    func fillInGuessPeg(row: Int, codeIndex: Int, pegNode: PegNode) {
+        // get position for guess
+        let position = positionForCodePeg(row, selectedIndex: codeIndex, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
+
+        // turn on effect field and suck in the color tile
+
+        pegNode.position = position
+        // make sure to advance to next unfilled index
+        if (nextIndexInGuess < self.boardLayout!.codeWidth) {
+            ++self.nextIndexInGuess
+            // TODO: go back to earlier indexes
+        }
+    }
+
+    // convenience function, embeds instance state
+    func positionForNextGuessPeg() -> CGPoint {
+        return positionForCodePeg(self.currentGuessRow, selectedIndex: nextIndexInGuess, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
+    }
+
+    // both guessRow and selectedIndex should start at 1
+    func positionForCodePeg(guessRow: Int, selectedIndex: Int, layout: BoardLayout, binHeight: CGFloat, inBounds: CGRect) -> CGPoint {
+        let numRows = layout.maxGuesses
+
+        let top = CGRectGetMaxY(inBounds)
+        let bottom = binHeight
+        let leadingX = inBounds.size.width / 4 // 1/4 width of board for key pegs, 3/4 for guess pegs
+        let trailingX = inBounds.size.width
+        let guessRowsHeight = top - bottom
+        let guessRowsWidth = trailingX - leadingX
+        let guessRowsRect = CGRect(x: leadingX, y: top, width: guessRowsWidth, height: guessRowsHeight)
+
+        let rowHeight = guessRowsHeight/CGFloat(numRows)
+        let codePegY = top - (rowHeight * CGFloat(guessRow))
+
+        // need space on the far edge
+        let codePegWidth = guessRowsWidth / CGFloat(layout.codeWidth + 1)
+        let codePegX = leadingX + (codePegWidth * CGFloat(selectedIndex - 1))
+
+        return CGPoint(x: codePegX, y: codePegY)
+    }
+
+    func positionForIndex(index: Int, segmentWidth: CGFloat) -> CGFloat {
+        var spacing = segmentWidth / 3.0
+        var indexFloat = CGFloat(index)
+        return (spacing * indexFloat) + (segmentWidth * indexFloat - 1)
+    }
+
+    func yPositionForBinSegmentsWithWidth(width: CGFloat) -> CGFloat {
+        return width * 1/3 // 1/3 of segment height for spacing on either side
+    }
+
+    func binHeightForSquareSegmentsWithWidth(width: CGFloat) -> CGFloat {
+        return width * 5/3 // 1/3 of segment height for spacing on either side
+    }
+
+    func pegTypesForLayout(layout: BoardLayout) -> [PegType] {
+        var pegTypes: [PegType] = []
+//        let segmentWidth = boardLayout.boardSize.width / boardLayout.
+        let desiredHeight = layout.segmentWidth
+        for index in 1...layout.pegTypeCount {
+            let size = CGSize(width: layout.segmentWidth, height: desiredHeight)
+            let peg = PegType(pegName: "pegType\(index)", pegSize:size, pegIndex: index)
+            pegTypes.append(peg)
+        }
+        return pegTypes
+    }
+
+//    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+//        for touch in touches as! Set<UITouch> {
+//            // extend SKScene with this instead? JQuery style lookup?
+//            var location = touch.locationInView(self.view)
+//            let touchedNode = self.nodeAtPoint(location)
+//            if let name = touchedNode.name where startsWith(name, pegPrefix) {
+//                // change this peg to selected state
+//                let newPeg = touchedNode.copy() as! SKSpriteNode
+//                newPeg.name = "userPeg"
+//                newPeg.position = CGPoint(x: touchedNode.position.x - 10.0, y: touchedNode.position.y + 40.0)
+//                self.addChild(newPeg)
+//            }
+//        }
+//    }
+
+
+    // MARK: Guess Logic
 
     func checkGuess(guess: Guess, completion: Feedback -> ()) {
         completion(fakeFeedback())
         ++self.currentGuessRow
-        if outOfGuesses(self.currentGuessRow, maxRows: self.maxGuesses) {
+        if outOfGuesses(self.currentGuessRow, maxRows: self.boardLayout!.maxGuesses) {
             self.currentRoundStatus = .Lost
         }
 
@@ -61,4 +181,39 @@ class BoardScene: SKScene {
     }
 }
 
+class PegNode : SKSpriteNode {
+    var pegType = PegTypeOption.Color(UIColor.redColor())
+    @IBInspectable var pegColor = UIColor.redColor()
+    @IBInspectable var pegValue = 0
 
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        for touch in touches as! Set<UITouch> {
+            var location = touch.locationInView(self.scene!.view)
+            if let touchedNode = self.nodeAtPoint(location) as? PegNode {
+                let newPeg = touchedNode.copy() as! PegNode
+                newPeg.name = "userPeg"
+                let board = touchedNode.scene! as! BoardScene
+                board.fillInNextGuessPeg(newPeg)
+                self.addChild(newPeg)
+            }
+
+        }
+
+    }
+}
+
+func partitionWidth(width: Int, forNumberOfSegments: Int) {
+
+}
+
+/*
+struct TypeNode {
+    var
+
+    class func layoutTypes(types: [PegTypeOption], inArea:CGRect) -> {
+        let count = types.count
+
+    }
+
+}
+*/
