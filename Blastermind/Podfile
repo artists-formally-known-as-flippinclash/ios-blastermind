@@ -2,7 +2,10 @@
 # platform :ios, '6.0'
 
 pod 'libPusher', '~> 1.5'
-pod "PusherSwift"
+
+# spec doesn't seem quite ready
+# https://github.com/pusher/pusher-swift-ws/blob/master/PusherSwift.podspec
+# pod "PusherSwift", :git => 'https://github.com/pusher/pusher-swift-ws.git'
 
 target 'Blastermind' do
 
