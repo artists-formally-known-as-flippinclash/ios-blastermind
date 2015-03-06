@@ -8,15 +8,26 @@
 
 import SpriteKit
 
+let startButtonText = "Start"
+let startButtonName = "startButton"
+
 class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 65;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
+        var centerX = CGRectGetMidX(self.frame)
+
+        let myLabel = SKLabelNode(fontNamed:"Avenir-Next")
+        myLabel.text = "Blast Your Mind";
+        myLabel.fontSize = 45;
+        myLabel.position = CGPoint(x: centerX, y:CGRectGetMaxY(self.frame) - 80);
         
         self.addChild(myLabel)
+
+        let startThingy = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(60.0, 30.0))
+        startThingy.position = CGPoint(x: centerX, y: CGRectGetMidY(self.frame))
+        startThingy.name = startButtonName
+
+        self.addChild(startThingy)
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -24,18 +35,15 @@ class GameScene: SKScene {
         
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
-            
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
+            let touchedNode = self.nodeAtPoint(location)
+            if touchedNode.name == startButtonName {
+                // change scene
+                let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
+                let transition = SKTransition.doorsOpenHorizontalWithDuration(1.0)
+
+                self.view?.presentScene(boardScene, transition: transition)
+            }
+
         }
     }
    
