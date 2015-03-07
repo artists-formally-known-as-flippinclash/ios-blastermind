@@ -11,7 +11,7 @@ import Foundation
 // All logic and game moves should go through here.
 // The engine may use other resources, locally or on a server, to make game
 // decisions
-class GameEngine {
+class GameEngine: ClientDelegate {
 
     private var engineState = EngineState.Online(Client())
 
@@ -20,6 +20,8 @@ class GameEngine {
     private var playerCallback: (Match)->() = {(Match) in  }
 
     var localPlayer: Player = Player(name:"Bobo", id: 1)
+
+    var watchedMatch: Match?
 
     // DEBUG:
     func makeItAllHappen() {
@@ -40,8 +42,8 @@ class GameEngine {
     func requestMatch(player: SuggestedPlayer, startMatchCallback:(Match)->()) {
         switch engineState {
         case .Online(let theClient):
+            theClient.delegate = self
             playerCallback = startMatchCallback
-//            theClient.startClient() // DEBUG:
             serverConn.requestNewMatch(player, callback: receiveMatch)
         case .Offline:
             // start local match
@@ -67,6 +69,7 @@ class GameEngine {
                 localPlayer = player
                 switch engineState {
                 case .Online(let client):
+                    watchedMatch = match
                     client.watchMatch(match, callback: { (eventData) -> Void in
                         println("engine got data: <\(eventData)>")
                     })
@@ -74,6 +77,10 @@ class GameEngine {
                     break
                 }
         }
+    }
+
+    func receivedEvent(_: PTPusherEvent!) {
+        playerCallback(watchedMatch!)
     }
 }
 

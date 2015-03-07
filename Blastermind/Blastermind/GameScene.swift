@@ -51,8 +51,14 @@ class GameScene: SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             let touchedNode = self.nodeAtPoint(location)
-            switchToBoard()
+
+            let player = SuggestedPlayer(name: "bobo2")
+            appGameEngine().requestMatch(player, startMatchCallback: startMatchCallback)
         }
+    }
+
+    func startMatchCallback(Match) {
+        switchToBoard()
     }
 
     func switchToBoard() {
@@ -68,5 +74,11 @@ class GameScene: SKScene {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+
+    // dirty dirty gross
+    func appGameEngine() -> GameEngine! {
+        let app = UIApplication.sharedApplication().delegate as! AppDelegate
+        return app.engine
     }
 }
