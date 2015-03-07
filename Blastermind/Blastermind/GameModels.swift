@@ -29,7 +29,7 @@ struct Guess {
 //}
 
 enum GuessType: String {
-    case alpha = "alpha", beta = "beta", gamma = "gamma", delta = "delta", epsilon = "espilon", zeta = "zeta"
+    case alpha = "alpha", beta = "beta", gamma = "gamma", delta = "delta", epsilon = "epsilon", zeta = "zeta"
 
     func color() -> UIColor {
         switch self {
