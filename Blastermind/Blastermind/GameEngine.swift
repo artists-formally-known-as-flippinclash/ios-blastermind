@@ -65,7 +65,7 @@ class GameEngine: ClientDelegate {
             let data = actualMatch[dataDictKey] as? NSDictionary,
             let match = Match(json: data)
              {
-                println("Received player: <\(player)>, match: <\(match)>, name: <\(match.name)>")
+//                println("Received player: <\(player)>, match: <\(match)>, name: <\(match.name)>")
                 localPlayer = player
                 switch engineState {
                 case .Online(let client):

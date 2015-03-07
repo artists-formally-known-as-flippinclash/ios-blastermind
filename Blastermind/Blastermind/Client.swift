@@ -92,7 +92,7 @@ class ServerConnection {
 
     func actuallySubmitGuess(player: Player, match: Match, guess: Guess, callback: (NSData)->() ) {
         let req = createGuessRequest(player, match: match, guess: guess)
-        println("<\(__FUNCTION__):\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
+//        println("<\(__FUNCTION__):\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
         let guessTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
             println("response: <\(response)>, <\(error)>")
 

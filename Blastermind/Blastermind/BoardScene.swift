@@ -34,6 +34,7 @@ class BoardScene: SKScene {
 
     var currentGuessRow = 1
     var nextIndexInGuess = 1
+    var currentGuess: [GuessType] = [GuessType.alpha, GuessType.alpha, GuessType.alpha, GuessType.alpha]
 
     var currentRoundStatus = RoundStatus.Waiting
 
@@ -64,6 +65,7 @@ class BoardScene: SKScene {
         let pegNodes = pegTypes.map {
             (pegType: PegType) -> PegNode in
             var aNewNode = PegNode(color: pegType.guessType.color(), size: pegType.pegSize)
+            aNewNode.pegGuessType = pegType.guessType
 //            aNewNode.color = prettyColor(aNewNode)
             aNewNode.pegColor = pegType.guessType.color() // just to be safe
 //            aNewNode.pegColor = aNewNode.color // shouldn't need to set both colors
@@ -97,6 +99,7 @@ class BoardScene: SKScene {
     }
 
     func fillInGuessPeg(row: Int, codeIndex: Int, pegNode: PegNode) {
+        currentGuess[codeIndex - 1] = pegNode.pegGuessType
         // get position for guess
         let position = positionForCodePeg(row, selectedIndex: codeIndex, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
 
@@ -187,13 +190,14 @@ class BoardScene: SKScene {
 
     func sendGuess() {
         println("send in the guess!")
-        submitGuess(fakeGuess(), completion: { (Feedback) in })
+        submitGuess(Guess(codeGuess: currentGuess), completion: { (Feedback) in })
     }
 
     func submitGuess(guess: Guess, completion: Feedback -> ()) {
         completion(fakeFeedback())
-        appGameEngine().easyGuess(fakeGuess())
+        appGameEngine().easyGuess(guess)
         ++self.currentGuessRow
+        self.currentGuess = [GuessType.alpha, GuessType.alpha, GuessType.alpha, GuessType.alpha] // I don't even care anymore
         if outOfGuesses(self.currentGuessRow, maxRows: self.boardLayout!.maxGuesses) {
             self.currentRoundStatus = .Lost
         }
@@ -205,9 +209,9 @@ class BoardScene: SKScene {
     }
 
     // MARK: Debug methods
-    func fakeGuess() -> Guess {
-        return Guess(codeGuess: [GuessType.alpha,GuessType.alpha,GuessType.beta,GuessType.zeta])
-    }
+//    func fakeGuess() -> Guess {
+//        return Guess(codeGuess: [GuessType.alpha,GuessType.alpha,GuessType.beta,GuessType.zeta])
+//    }
 
     func fakeFeedback() -> Feedback {
         return Feedback(key: [.CorrectType, .CorrectType])
@@ -225,12 +229,14 @@ class PegNode : SKSpriteNode {
     var pegType = PegTypeOption.Color(UIColor.redColor())
     @IBInspectable var pegColor = UIColor.redColor()
     @IBInspectable var pegValue = 0
+    var pegGuessType = GuessType.alpha
 
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in touches as! Set<UITouch> {
             var location = touch.locationInView(self.scene!.view)
             if let touchedNode = self.nodeAtPoint(location) as? PegNode {
                 let newPeg = touchedNode.copy() as! PegNode
+                newPeg.pegGuessType = touchedNode.pegGuessType // *sigh*
                 newPeg.name = "userPeg"
                 let board = touchedNode.scene! as! BoardScene
                 board.fillInNextGuessPeg(newPeg)
