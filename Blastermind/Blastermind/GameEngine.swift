@@ -25,6 +25,7 @@ class GameEngine: ClientDelegate {
 
     // aaaaaaahhhh
     var feedbackForAllRows: [Feedback] = []
+    var feedbackCallback: ((Feedback)->())?
 
     // DEBUG:
     func makeItAllHappen() {
@@ -86,7 +87,8 @@ class GameEngine: ClientDelegate {
         playerCallback(watchedMatch!)
     }
 
-    func easyGuess(guess: Guess) {
+    func easyGuess(guess: Guess, feedCallBack: (Feedback)->() ) {
+        self.feedbackCallback = feedCallBack
         sendInGuess(localPlayer, match: watchedMatch!, guess: guess)
     }
 
@@ -119,6 +121,7 @@ class GameEngine: ClientDelegate {
                 let tc = feedbackDict[typeCountKey] ?? 0
                 let tpc = feedbackDict[typeAndPositionKey] ?? 0
                 let feedback = Feedback(typeCount: tc, typeAndPositionCount: tpc, row: 0) // FIXME: BROKEN, NEED ROW
+            self.feedbackCallback?(feedback)
         }
 
     }

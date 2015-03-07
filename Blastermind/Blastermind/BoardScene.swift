@@ -35,6 +35,7 @@ class BoardScene: SKScene {
     var currentGuessRow = 1
     var nextIndexInGuess = 1
     var currentGuess: [GuessType] = [GuessType.alpha, GuessType.alpha, GuessType.alpha, GuessType.alpha]
+    var currentGuessCount = 0
 
     var currentRoundStatus = RoundStatus.Waiting
 
@@ -100,6 +101,8 @@ class BoardScene: SKScene {
 
     func fillInGuessPeg(row: Int, codeIndex: Int, pegNode: PegNode) {
         if currentGuessRow > 10 {return}
+
+        ++currentGuessCount
 
         currentGuess[codeIndex - 1] = pegNode.pegGuessType
         // get position for guess
@@ -179,6 +182,8 @@ class BoardScene: SKScene {
             let location = touch.locationInNode(self)
             let touchedNode = self.nodeAtPoint(location)
             if touchedNode.name == submitButtonName {
+
+
                 sendGuess()
                 println("submit")
             }
@@ -188,13 +193,21 @@ class BoardScene: SKScene {
     // MARK: Guess Logic
 
     func sendGuess() {
+
         println("send in the guess!")
-        submitGuess(Guess(codeGuess: currentGuess), completion: { (Feedback) in })
+        submitGuess(Guess(codeGuess: currentGuess), completion: { (Feedback) in
+            println("Now Show this feedback, count: <\(Feedback.key.count)>")
+        })
     }
+//    FEEEEEEEEDBACK
 
     func submitGuess(guess: Guess, completion: Feedback -> ()) {
-        completion(fakeFeedback())
-        appGameEngine().easyGuess(guess)
+        // This check doesn't work, b/c I prefill the guess
+        if guess.codeGuess.count < 4 { return }
+
+        if currentGuessCount < 4 { return } else { currentGuessCount = 0 }
+
+        appGameEngine().easyGuess(guess, feedCallBack: completion)
         ++self.currentGuessRow
         self.nextIndexInGuess = 1
         self.currentGuess = [GuessType.alpha, GuessType.alpha, GuessType.alpha, GuessType.alpha] // I don't even care anymore
@@ -244,6 +257,24 @@ class PegNode : SKSpriteNode {
 
         }
 
+    }
+}
+
+class KeyNode: SKSpriteNode {
+    var keyType: KeyType = KeyType.CorrectType
+
+    func keyColor() -> UIColor {
+        return (keyType == .CorrectType) ? UIColor.darkGrayColor() : UIColor.redColor()
+    }
+
+    class func nodesForKeys(types: [KeyType]) -> [KeyNode] {
+        return types.map {
+            (type: KeyType) -> KeyNode in
+            let node = KeyNode(color: UIColor.whiteColor(), size: CGSize(width: 6.0, height: 6.0))
+            node.keyType = type
+            node.color = node.keyColor()
+            return node
+        }
     }
 }
 
