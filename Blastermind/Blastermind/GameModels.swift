@@ -10,12 +10,60 @@ import Foundation
 import UIKit
 import SpriteKit
 
+let codeGuessKey = "code_pegs"
 struct Guess {
     var codeGuess: [GuessType]
+
+    // <3 <3 <3 <3 <3
+    func asJSONDictionary() -> [String: [String]] {
+        let stringlyGuesses = codeGuess.map {$0.rawValue}
+
+        return [codeGuessKey: stringlyGuesses]
+    }
+    // 💕💕💕💕💕💕💕💕💕💕💕💕💕💕
+
 }
+
+//extension Guess {
+//    init?(json: Dictionary)
+//}
 
 enum GuessType: String {
     case alpha = "alpha", beta = "beta", gamma = "gamma", delta = "delta", epsilon = "espilon", zeta = "zeta"
+
+    func color() -> UIColor {
+        switch self {
+        case .alpha: return UIColor.alphaColor()
+        case .beta: return UIColor.betaColor()
+        case .gamma: return UIColor.gammaColor()
+        case .delta: return UIColor.deltaColor()
+        case .epsilon: return UIColor.epsilonColor()
+        case .zeta: return UIColor.zetaColor()
+        }
+    }
+}
+
+extension GuessType {
+    init?(oneIndex: Int) {
+        let try: GuessType
+        switch oneIndex {
+        case 1:
+            try = GuessType.alpha
+        case 2:
+            try = GuessType.beta
+        case 3:
+            try = GuessType.gamma
+        case 4:
+            try = GuessType.delta
+        case 5:
+            try = GuessType.epsilon
+        case 6:
+            try = GuessType.zeta
+        default:
+            return nil
+        }
+        self = try
+    }
 }
 
 struct Feedback {

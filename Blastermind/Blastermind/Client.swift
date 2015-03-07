@@ -67,7 +67,7 @@ class Client: NSObject, PTPusherDelegate {
 }
 
 class ServerConnection {
-    let baseString = "http://api.blasterminds.com"
+    let baseString = "http://api.blasterminds.com/"
     let fakeGuessURL = NSURL(string:"http://private-73307-blastermind.apiary-mock.com/matches/801/guesses")!
 
     lazy var session: NSURLSession = {
@@ -76,7 +76,7 @@ class ServerConnection {
 
     func requestNewMatch(player: SuggestedPlayer, callback: (NSData)->() ) {
         let req = createMatchRequest(player)
-        println("<\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
+//        println("<\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
         let matchTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
             println("response: <\(response)>, <\(error)>")
 
@@ -88,6 +88,16 @@ class ServerConnection {
         })
 
         matchTask.resume()
+    }
+
+    func actuallySubmitGuess(player: Player, match: Match, guess: Guess, callback: (NSData)->() ) {
+        let req = createGuessRequest(player, match: match, guess: guess)
+        println("<\(__FUNCTION__):\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
+        let guessTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
+            println("response: <\(response)>, <\(error)>")
+
+        })
+        guessTask.resume()
     }
 
     // MARK: Convenience request builders
@@ -107,6 +117,23 @@ class ServerConnection {
         return request.copy() as! NSURLRequest
     }
 
+    let guessDictKey = "guess"
+    func createGuessRequest(player: Player, match: Match, guess: Guess) -> NSURLRequest {
+        let request = mutableRequestForURL(guessURL(player, match: match)!)
+        let guessDict = guess.asJSONDictionary()
+        let payload = [guessDictKey: guessDict]
+
+        var maybeError = NSErrorPointer()
+        let data = NSJSONSerialization.dataWithJSONObject(payload, options: nil, error: maybeError)
+        if data == nil && maybeError != nil {
+            println("Oops. Broken request with no data. <\(maybeError)>")
+        } else if let actualData = data {
+            request.HTTPBody = actualData
+        }
+
+        return request.copy() as! NSURLRequest
+    }
+
     // MARK: Request creation
     func mutableRequestForURL(url: NSURL) -> NSMutableURLRequest {
         var mutableRequest = NSMutableURLRequest(URL: url)
@@ -118,7 +145,7 @@ class ServerConnection {
     // MARK: URL Creation
     func fullURLForEndpoint(endpoint: String) -> NSURL? {
         // escaping? Who ever heard of it.
-        let fullString = baseString.stringByAppendingString("/\(endpoint)")
+        let fullString = baseString.stringByAppendingString("\(endpoint)")
         let fullURL = NSURL(string: fullString)
         return fullURL
     }
@@ -127,6 +154,11 @@ class ServerConnection {
     let createMatchString = "matches"
     func requestMatchURL() -> NSURL? {
         return fullURLForEndpoint(createMatchString)
+    }
+
+    func guessURL(player: Player, match: Match) -> NSURL? {
+        var endpoint = "matches/\(match.id)/players/\(player.id)/guesses"
+        return fullURLForEndpoint(endpoint)
     }
 
     func guess([Int], result:([Int]) -> ()) {

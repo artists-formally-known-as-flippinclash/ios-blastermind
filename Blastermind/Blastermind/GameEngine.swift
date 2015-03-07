@@ -82,6 +82,16 @@ class GameEngine: ClientDelegate {
     func receivedEvent(_: PTPusherEvent!) {
         playerCallback(watchedMatch!)
     }
+
+    func easyGuess(guess: Guess) {
+        sendInGuess(localPlayer, match: watchedMatch!, guess: guess)
+    }
+
+    func sendInGuess(player: Player, match: Match, guess: Guess) {
+        serverConn.actuallySubmitGuess(player, match: match, guess: guess) { (data) -> () in
+            println("got guess data: <\(data)>")
+        }
+    }
 }
 
 private enum EngineState {

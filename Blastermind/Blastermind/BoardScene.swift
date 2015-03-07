@@ -63,9 +63,10 @@ class BoardScene: SKScene {
 
         let pegNodes = pegTypes.map {
             (pegType: PegType) -> PegNode in
-            var aNewNode = PegNode(color: UIColor.orangeColor(), size: pegType.pegSize)
-            aNewNode.color = prettyColor(aNewNode)
-            aNewNode.pegColor = aNewNode.color // shouldn't need to set both colors
+            var aNewNode = PegNode(color: pegType.guessType.color(), size: pegType.pegSize)
+//            aNewNode.color = prettyColor(aNewNode)
+            aNewNode.pegColor = pegType.guessType.color() // just to be safe
+//            aNewNode.pegColor = aNewNode.color // shouldn't need to set both colors
             aNewNode.userInteractionEnabled = true
             aNewNode.name = pegType.pegName
             let newXPosition = self.positionForIndex(pegType.pegIndex, segmentWidth: actualLayout.segmentWidth)
@@ -161,8 +162,9 @@ class BoardScene: SKScene {
 //        let segmentWidth = boardLayout.boardSize.width / boardLayout.
         let desiredHeight = layout.segmentWidth
         for index in 1...layout.pegTypeCount {
+            // precondition :index <= 6, GuessType count
             let size = CGSize(width: layout.segmentWidth, height: desiredHeight)
-            let peg = PegType(pegName: "pegType\(index)", pegSize:size, pegIndex: index)
+            let peg = PegType(pegName: "pegType\(index)", pegSize:size, pegIndex: index, guessType: GuessType(oneIndex: index)!)
             pegTypes.append(peg)
         }
         return pegTypes
@@ -175,7 +177,7 @@ class BoardScene: SKScene {
             let location = touch.locationInNode(self)
             let touchedNode = self.nodeAtPoint(location)
             if touchedNode.name == submitButtonName {
-//                checkGuess(<#guess: Guess#>, <#completion: Feedback -> ()##Feedback -> ()#>)
+                sendGuess()
                 println("submit")
             }
         }
@@ -190,6 +192,7 @@ class BoardScene: SKScene {
 
     func submitGuess(guess: Guess, completion: Feedback -> ()) {
         completion(fakeFeedback())
+        appGameEngine().easyGuess(fakeGuess())
         ++self.currentGuessRow
         if outOfGuesses(self.currentGuessRow, maxRows: self.boardLayout!.maxGuesses) {
             self.currentRoundStatus = .Lost
@@ -208,6 +211,13 @@ class BoardScene: SKScene {
 
     func fakeFeedback() -> Feedback {
         return Feedback(key: [.CorrectType, .CorrectType])
+    }
+
+
+    // dirty dirty gross
+    func appGameEngine() -> GameEngine! {
+        let app = UIApplication.sharedApplication().delegate as! AppDelegate
+        return app.engine
     }
 }
 
