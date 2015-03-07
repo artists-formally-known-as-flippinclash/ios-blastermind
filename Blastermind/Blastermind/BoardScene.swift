@@ -78,6 +78,7 @@ class BoardScene: SKScene {
         let position = positionForCodePeg(row, selectedIndex: codeIndex, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
 
         // turn on effect field and suck in the color tile
+        self.addChild(pegNode)
 
         pegNode.position = position
         // make sure to advance to next unfilled index
@@ -194,7 +195,6 @@ class PegNode : SKSpriteNode {
                 newPeg.name = "userPeg"
                 let board = touchedNode.scene! as! BoardScene
                 board.fillInNextGuessPeg(newPeg)
-                self.addChild(newPeg)
             }
 
         }
