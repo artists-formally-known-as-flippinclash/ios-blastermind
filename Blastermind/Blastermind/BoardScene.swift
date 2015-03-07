@@ -195,11 +195,23 @@ class BoardScene: SKScene {
     func sendGuess() {
 
         println("send in the guess!")
-        submitGuess(Guess(codeGuess: currentGuess), completion: { (Feedback) in
-            println("Now Show this feedback, count: <\(Feedback.key.count)>")
+        submitGuess(Guess(codeGuess: currentGuess), completion: { (feedback) in
+            println("Now Show this feedback, count: <\(feedback.key.count)>")
+            let correctedFeedback = Feedback(key: feedback.key, row: self.currentGuessRow)
+            self.addFeedbackNodesForFeedback(correctedFeedback)
         })
     }
 //    FEEEEEEEEDBACK
+    func addFeedbackNodesForFeedback(feed: Feedback) {
+        let nodes = KeyNode.nodesForKeys(feed.key)
+
+        for (index, node) in enumerate(nodes) {
+            let x = CGFloat(index) * 9.0 + 8
+            let y = self.frame.maxY - (CGFloat(currentGuessRow) * 40.0)
+            node.position = CGPoint(x: x, y: y)
+            self.addChild(node)
+        }
+    }
 
     func submitGuess(guess: Guess, completion: Feedback -> ()) {
         // This check doesn't work, b/c I prefill the guess
@@ -225,10 +237,9 @@ class BoardScene: SKScene {
 //    func fakeGuess() -> Guess {
 //        return Guess(codeGuess: [GuessType.alpha,GuessType.alpha,GuessType.beta,GuessType.zeta])
 //    }
-
-    func fakeFeedback() -> Feedback {
-        return Feedback(key: [.CorrectType, .CorrectType], row: 1)
-    }
+//    func fakeFeedback() -> Feedback {
+//        return Feedback(key: [.CorrectType, .CorrectType], row: 1)
+//    }
 
 
     // dirty dirty gross
