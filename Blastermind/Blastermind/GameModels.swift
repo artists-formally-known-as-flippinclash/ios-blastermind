@@ -34,3 +34,31 @@ enum RoundStatus {
 //enum PegType: PegTypeOption { // T == PegTypeOption
 //    case A(PegTypeOption), B(PegTypeOption), C(PegTypeOption), D(PegTypeOption), E(PegTypeOption), F(PegTypeOption)
 //}
+
+struct SuggestedPlayer {
+    var name: String
+
+    func convertToRealPlayerWithID(id: Int) -> Player {
+        return Player(name: self.name, id: id)
+    }
+
+    func asJSONDictionary() -> [String: [String: String]] { // soul dies a little
+        return ["player": ["name": name]] // and a little more
+    }
+}
+
+struct Player {
+    var name: String
+    var id: Int
+}
+
+struct Match {
+    var id: Int
+    var channel: String
+    var state: MatchState
+    var players: [Player] // self(Player) will be the last one in the list from first return of match
+}
+
+enum MatchState: String {
+    case MatchMaking = "match-making", InProgress = "in-progress", finished = "finished"
+}

@@ -16,14 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        let client = Client()
+        let engine = GameEngine()
 
-        client.startClient()
-
-        let serverConnection = ServerConnection()
-        serverConnection.guess([1,1,1,1], result: { (feedback) -> () in
-            println("surprise")
-        })
+        engine.makeItAllHappen()
+        
+//        let serverConnection = ServerConnection()
+//        serverConnection.guess([1,1,1,1], result: { (feedback) -> () in
+//            println("surprise")
+//        })
 
         return true
     }

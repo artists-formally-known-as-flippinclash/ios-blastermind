@@ -31,14 +31,64 @@ class Client: NSObject, PTPusherDelegate {
 }
 
 class ServerConnection {
-    let URL = NSURL(string:"http://private-73307-blastermind.apiary-mock.com/matches/801/guesses")!
+    let baseString = "http://api.blasterminds.com"
+    let fakeGuessURL = NSURL(string:"http://private-73307-blastermind.apiary-mock.com/matches/801/guesses")!
 
     lazy var session: NSURLSession = {
         return NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
     }()
 
+    func requestNewMatch(player: SuggestedPlayer, callback: ()->() ) {
+        let req = createMatchRequest(player)
+        let matchTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
+            println("response: <\(response)")
+            callback()
+        })
+
+        matchTask.resume()
+    }
+
+    // MARK: Convenience request builders
+    func createMatchRequest(player: SuggestedPlayer) -> NSURLRequest {
+        let request = mutableRequestForURL(requestMatchURL()!) // BOOM not Swifty
+        let payload = player.asJSONDictionary()
+
+        var maybeError = NSErrorPointer()
+        let data = NSJSONSerialization.dataWithJSONObject(payload, options: nil, error: maybeError)
+        if data == nil && maybeError != nil {
+            // tell somebody
+            println("Oops. Broken request with no data. <\(maybeError)>")
+        } else if let actualData = data {
+            request.HTTPBody = actualData
+        }
+
+        return request.copy() as! NSURLRequest
+    }
+
+    // MARK: Request creation
+    func mutableRequestForURL(url: NSURL) -> NSMutableURLRequest {
+        var mutableRequest = NSMutableURLRequest(URL: url)
+        mutableRequest.HTTPMethod = "POST"
+        mutableRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        return mutableRequest
+    }
+
+    // MARK: URL Creation
+    func fullURLForEndpoint(endpoint: String) -> NSURL? {
+        // escaping? Who ever heard of it.
+        let fullString = baseString.stringByAppendingPathComponent(endpoint)
+        let fullURL = NSURL(string: fullString)
+        return fullURL
+    }
+
+    // MARK: convenience urls
+    let createMatchString = "matches"
+    func requestMatchURL() -> NSURL? {
+        return fullURLForEndpoint(createMatchString)
+    }
+
     func guess([Int], result:([Int]) -> ()) {
-        let guessTask = session.dataTaskWithURL(URL, completionHandler: { (data, response, error) -> Void in
+        let guessTask = session.dataTaskWithURL(fakeGuessURL, completionHandler: { (data, response, error) -> Void in
             self.pong()
             println(response)
         })

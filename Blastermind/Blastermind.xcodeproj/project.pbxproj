@@ -21,6 +21,7 @@
 		B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F4E1AA96FA600C5560A /* BoardScene.swift */; };
 		B8724F511AA9887000C5560A /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F501AA9887000C5560A /* GameModels.swift */; };
 		B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */; };
+		B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F058841AAA9A45007965BA /* GameEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		B8724F4E1AA96FA600C5560A /* BoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardScene.swift; sourceTree = "<group>"; };
 		B8724F501AA9887000C5560A /* GameModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
 		B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardLayout.swift; sourceTree = "<group>"; };
+		B8F058841AAA9A45007965BA /* GameEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
 		EC7CCB13DBCF8EB2443C3B9C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +120,7 @@
 			children = (
 				B8390C971AA8F3DE007A3111 /* AppDelegate.swift */,
 				B8390CBB1AA90441007A3111 /* Client.swift */,
+				B8F058841AAA9A45007965BA /* GameEngine.swift */,
 				B8724F4B1AA9175700C5560A /* Blastermind-Bridging-Header.h */,
 				B8390C991AA8F3DF007A3111 /* GameScene.sks */,
 				B8390C9B1AA8F3DF007A3111 /* GameScene.swift */,
@@ -299,6 +302,7 @@
 				B8390C9C1AA8F3DF007A3111 /* GameScene.swift in Sources */,
 				B8724F511AA9887000C5560A /* GameModels.swift in Sources */,
 				B8390C9E1AA8F3DF007A3111 /* GameViewController.swift in Sources */,
+				B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */,
 				B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */,
 				B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */,
 				B8390CBC1AA90441007A3111 /* Client.swift in Sources */,
