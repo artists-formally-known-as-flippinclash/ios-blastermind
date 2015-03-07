@@ -75,7 +75,7 @@ struct Match {
     var name: String
 //    var players: [Player]
     // var rounds: [Round] // not using this yet
-//    var state: MatchState
+    var state: MatchState
 }
 
 let channelKey = "channel"
@@ -86,11 +86,12 @@ extension Match {
     init?(json: NSDictionary) {
         if let channel = json[channelKey] as? String,
             let id = json[idKey] as? Int,
-            let name = json[nameKey] as? String
+            let name = json[nameKey] as? String,
 //        let players = json[playersKey] as? [Any],
-//            let state = json[stateKey] as? Any // MatchState
+            let stateString = json[stateKey] as? String,
+            let state = MatchState(rawValue: stateString)// MatchState
         {
-                self = Match(channel: channel, id: id, name: name)
+            self = Match(channel: channel, id: id, name: name, state: state)
         } else {
             return nil
         }
@@ -98,5 +99,5 @@ extension Match {
 }
 
 enum MatchState: String {
-    case MatchMaking = "match-making", InProgress = "in-progress", finished = "finished"
+    case MatchMaking = "match_making", InProgress = "in_progress", finished = "finished"
 }
