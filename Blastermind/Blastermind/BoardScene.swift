@@ -85,13 +85,10 @@ class BoardScene: SKScene {
         if (nextIndexInGuess < self.boardLayout!.codeWidth) {
             ++self.nextIndexInGuess
             // TODO: go back to earlier indexes
+            // TODO: skip already filled-in indexes
         }
     }
 
-    // convenience function, embeds instance state
-    func positionForNextGuessPeg() -> CGPoint {
-        return positionForCodePeg(self.currentGuessRow, selectedIndex: nextIndexInGuess, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
-    }
 
     // both guessRow and selectedIndex should start at 1
     func positionForCodePeg(guessRow: Int, selectedIndex: Int, layout: BoardLayout, binHeight: CGFloat, inBounds: CGRect) -> CGPoint {
@@ -140,22 +137,6 @@ class BoardScene: SKScene {
         }
         return pegTypes
     }
-
-//    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-//        for touch in touches as! Set<UITouch> {
-//            // extend SKScene with this instead? JQuery style lookup?
-//            var location = touch.locationInView(self.view)
-//            let touchedNode = self.nodeAtPoint(location)
-//            if let name = touchedNode.name where startsWith(name, pegPrefix) {
-//                // change this peg to selected state
-//                let newPeg = touchedNode.copy() as! SKSpriteNode
-//                newPeg.name = "userPeg"
-//                newPeg.position = CGPoint(x: touchedNode.position.x - 10.0, y: touchedNode.position.y + 40.0)
-//                self.addChild(newPeg)
-//            }
-//        }
-//    }
-
 
     // MARK: Guess Logic
 
