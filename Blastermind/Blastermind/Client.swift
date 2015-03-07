@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Server: NSObject, PTPusherDelegate {
+class Client: NSObject, PTPusherDelegate {
     lazy var client: PTPusher = {
         return PTPusher.pusherWithKey("a8dc613841aa8963a8a4", delegate: self) as! PTPusher
     }()
