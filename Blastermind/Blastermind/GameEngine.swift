@@ -23,6 +23,9 @@ class GameEngine: ClientDelegate {
 
     var watchedMatch: Match?
 
+    // aaaaaaahhhh
+    var feedbackForAllRows: [Feedback] = []
+
     // DEBUG:
     func makeItAllHappen() {
         let maybePlayer = SuggestedPlayer(name: "Bobo")
@@ -90,7 +93,34 @@ class GameEngine: ClientDelegate {
     func sendInGuess(player: Player, match: Match, guess: Guess) {
         serverConn.actuallySubmitGuess(player, match: match, guess: guess) { (data) -> () in
             println("got guess data: <\(data)>")
+            self.receiveFeedback(data)
         }
+    }
+
+    func receiveFeedback(data: NSData) {
+        let dataDictKey = "data"
+        let feedbackDictKey = "feedback"
+        let typeCountKey = "position_count"
+        let typeAndPositionKey = "peg_count"
+
+        let outcomeKey = "outcome" // might cheat and grab this
+        let lossKey = "incorrect"
+        let winKey = "correct"
+
+        var jsonParsingError = NSErrorPointer()
+        let fullFeedbackDict = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.allZeros, error: jsonParsingError) as! [String: AnyObject]?
+        if fullFeedbackDict == nil && jsonParsingError != nil {
+            println("Failed to parse match: <\(jsonParsingError)")
+        } else if let actualDict = fullFeedbackDict,
+            let dataDict = actualDict[dataDictKey] as? NSDictionary,
+        let feedbackDict = dataDict[feedbackDictKey] as? [String: Int] {
+                println(fullFeedbackDict)
+                println(feedbackDict)
+                let tc = feedbackDict[typeCountKey] ?? 0
+                let tpc = feedbackDict[typeAndPositionKey] ?? 0
+                let feedback = Feedback(typeCount: tc, typeAndPositionCount: tpc, row: 0) // FIXME: BROKEN, NEED ROW
+        }
+
     }
 }
 

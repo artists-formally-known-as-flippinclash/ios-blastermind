@@ -68,6 +68,23 @@ extension GuessType {
 
 struct Feedback {
     let key: [KeyType] // should this just be count of each type instead?
+    let row: Int
+}
+
+extension Feedback {
+    init(typeCount: Int, typeAndPositionCount: Int, row: Int) {
+        var typeCountArr: [KeyType] = []
+        for var i = 0; i < typeCount; ++i {
+            typeCountArr.append(.CorrectType)
+        }
+        var bothCountArr: [KeyType] = []
+        for var j = 0; j < typeAndPositionCount; ++j {
+            bothCountArr.append(.CorrectTypeAndPosition)
+        }
+        // precondition: total count <= 4
+        self.key = bothCountArr + typeCountArr
+        self.row = row
+    }
 }
 
 enum KeyType {

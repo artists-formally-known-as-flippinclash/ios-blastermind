@@ -36,7 +36,7 @@ class GameScene: SKScene {
         startLabel.fontColor = UIColor.blackColor()
         startLabel.position = CGPoint(x: 0.0, y: -10.0)
         startLabel.name = "startLabel"
-        startLabel.userInteractionEnabled = true // FIXME: label isn't handling touches right
+        startLabel.userInteractionEnabled = true // TODO: label isn't handling touches right
         startThingy.addChild(startLabel)
 
         self.addChild(startThingy)

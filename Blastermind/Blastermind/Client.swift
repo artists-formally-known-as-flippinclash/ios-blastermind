@@ -95,7 +95,7 @@ class ServerConnection {
 //        println("<\(__FUNCTION__):\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
         let guessTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
             println("response: <\(response)>, <\(error)>")
-
+            callback(data)
         })
         guessTask.resume()
     }

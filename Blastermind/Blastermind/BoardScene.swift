@@ -99,6 +99,8 @@ class BoardScene: SKScene {
     }
 
     func fillInGuessPeg(row: Int, codeIndex: Int, pegNode: PegNode) {
+        if currentGuessRow > 10 {return}
+
         currentGuess[codeIndex - 1] = pegNode.pegGuessType
         // get position for guess
         let position = positionForCodePeg(row, selectedIndex: codeIndex, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
@@ -115,10 +117,7 @@ class BoardScene: SKScene {
             ++self.nextIndexInGuess
             // TODO: go back to earlier indexes
             // TODO: skip already filled-in indexes
-        } else if (self.currentGuessRow < self.boardLayout!.maxGuesses){ // DEBUG:
-            self.nextIndexInGuess = 1
-            ++self.currentGuessRow
-        } else {
+        } else if self.nextIndexInGuess > self.boardLayout?.maxGuesses {
             pegNode.removeFromParent()
         }
     }
@@ -197,6 +196,7 @@ class BoardScene: SKScene {
         completion(fakeFeedback())
         appGameEngine().easyGuess(guess)
         ++self.currentGuessRow
+        self.nextIndexInGuess = 1
         self.currentGuess = [GuessType.alpha, GuessType.alpha, GuessType.alpha, GuessType.alpha] // I don't even care anymore
         if outOfGuesses(self.currentGuessRow, maxRows: self.boardLayout!.maxGuesses) {
             self.currentRoundStatus = .Lost
@@ -214,7 +214,7 @@ class BoardScene: SKScene {
 //    }
 
     func fakeFeedback() -> Feedback {
-        return Feedback(key: [.CorrectType, .CorrectType])
+        return Feedback(key: [.CorrectType, .CorrectType], row: 1)
     }
 
 
