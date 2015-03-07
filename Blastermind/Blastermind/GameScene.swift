@@ -40,6 +40,9 @@ class GameScene: SKScene {
         startThingy.addChild(startLabel)
 
         self.addChild(startThingy)
+
+        // DEBUG:
+        switchToBoard()
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -48,18 +51,19 @@ class GameScene: SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             let touchedNode = self.nodeAtPoint(location)
-//            if touchedNode.name == startButtonName || touchedNode.parent?.name == startButtonName {
-                // change scene
-            let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
-            boardScene.scaleMode = SKSceneScaleMode.ResizeFill
-            boardScene.size = self.size
-            boardScene.boardLayout = BoardLayout(boardSize: self.size) // SHIPIT dirty hack
-            let transition = SKTransition.doorsOpenVerticalWithDuration(1.0)
-
-            self.view?.presentScene(boardScene, transition: transition)
-//            }
-
+            switchToBoard()
         }
+    }
+
+    func switchToBoard() {
+        let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
+        boardScene.scaleMode = SKSceneScaleMode.ResizeFill
+        boardScene.size = self.size
+        boardScene.boardLayout = BoardLayout(boardSize: self.size) // SHIPIT dirty hack
+        let transition = SKTransition.doorsOpenVerticalWithDuration(1.0)
+
+        self.view?.presentScene(boardScene, transition: transition)
+
     }
    
     override func update(currentTime: CFTimeInterval) {
