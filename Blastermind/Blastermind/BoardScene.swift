@@ -24,6 +24,7 @@ let defaultColors = [1: UIColor.redColor(), 2: UIColor.orangeColor(),
 
 
 let pegPrefix = "peg"
+let submitButtonName = "submitButton"
 
 class BoardScene: SKScene {
     var boardLayout: BoardLayout? // REALLY NOT SWIFTY
@@ -33,6 +34,15 @@ class BoardScene: SKScene {
     var nextIndexInGuess = 1
 
     var currentRoundStatus = RoundStatus.Waiting
+
+    var submitGuessButton: SKNode = {
+        let button = SKNode()
+        let color = SKSpriteNode(color: UIColor.whiteColor(), size: CGSize(width: 80.0,height: 80.0))
+        button.addChild(color)
+        button.position = CGPoint(x: 50.0, y: 90.0)
+        button.name = submitButtonName
+        return button
+    }()
 
     override func didMoveToView(view: SKView) {
         self.scaleMode = SKSceneScaleMode.ResizeFill
@@ -64,6 +74,8 @@ class BoardScene: SKScene {
             self.addChild(aNewNode)
             return aNewNode
         }
+
+        self.addChild(submitGuessButton)
     }
 
     // MARK: Interact with Board for guesses
@@ -77,6 +89,9 @@ class BoardScene: SKScene {
         // get position for guess
         let position = positionForCodePeg(row, selectedIndex: codeIndex, layout: self.boardLayout!, binHeight: self.binHeightForSquareSegmentsWithWidth(self.boardLayout!.segmentWidth), inBounds: self.view!.bounds)
 
+        // TODO: make sure we have a spot to put this guess,
+        //  or that we remove the old pegNode before adding another
+
         // turn on effect field and suck in the color tile
         self.addChild(pegNode)
 
@@ -86,6 +101,11 @@ class BoardScene: SKScene {
             ++self.nextIndexInGuess
             // TODO: go back to earlier indexes
             // TODO: skip already filled-in indexes
+        } else if (self.currentGuessRow < self.boardLayout!.maxGuesses){ // DEBUG:
+            self.nextIndexInGuess = 1
+            ++self.currentGuessRow
+        } else {
+            pegNode.removeFromParent()
         }
     }
 
@@ -138,9 +158,22 @@ class BoardScene: SKScene {
         return pegTypes
     }
 
+    // MARK: Handle touches
+
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        for touch in (touches as! Set<UITouch>) {
+            let location = touch.locationInNode(self)
+            let touchedNode = self.nodeAtPoint(location)
+            if touchedNode.name == submitButtonName {
+//                checkGuess(<#guess: Guess#>, <#completion: Feedback -> ()##Feedback -> ()#>)
+                println("submit")
+            }
+        }
+    }
+
     // MARK: Guess Logic
 
-    func checkGuess(guess: Guess, completion: Feedback -> ()) {
+    func submitGuess(guess: Guess, completion: Feedback -> ()) {
         completion(fakeFeedback())
         ++self.currentGuessRow
         if outOfGuesses(self.currentGuessRow, maxRows: self.boardLayout!.maxGuesses) {
