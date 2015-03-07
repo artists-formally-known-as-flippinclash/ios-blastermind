@@ -1,0 +1,17 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+pod 'libPusher', '~> 1.5'
+
+# spec doesn't seem quite ready
+# https://github.com/pusher/pusher-swift-ws/blob/master/PusherSwift.podspec
+# pod "PusherSwift", :git => 'https://github.com/pusher/pusher-swift-ws.git'
+
+target 'Blastermind' do
+
+end
+
+target 'BlastermindTests' do
+
+end
+
