@@ -38,6 +38,7 @@ enum RoundStatus {
 // MARK: Player related
 let nameKey = "name"
 let idKey = "id"
+let guessesKey = "guesses"
 
 struct SuggestedPlayer {
     var name: String
@@ -54,6 +55,7 @@ struct SuggestedPlayer {
 struct Player {
     var name: String
     var id: Int
+    // var guesses: [Guess] // ignoring unless I need them
 }
 
 extension Player {
@@ -68,10 +70,31 @@ extension Player {
 }
 
 struct Match {
-    var id: Int
     var channel: String
-    var state: MatchState
-    var players: [Player] // self(Player) will be the last one in the list from first return of match
+    var id: Int
+    var name: String
+//    var players: [Player]
+    // var rounds: [Round] // not using this yet
+//    var state: MatchState
+}
+
+let channelKey = "channel"
+let playersKey = "players"
+// let roundsKey = "rounds
+let stateKey = "state"
+extension Match {
+    init?(json: NSDictionary) {
+        if let channel = json[channelKey] as? String,
+            let id = json[idKey] as? Int,
+            let name = json[nameKey] as? String
+//        let players = json[playersKey] as? [Any],
+//            let state = json[stateKey] as? Any // MatchState
+        {
+                self = Match(channel: channel, id: id, name: name)
+        } else {
+            return nil
+        }
+    }
 }
 
 enum MatchState: String {

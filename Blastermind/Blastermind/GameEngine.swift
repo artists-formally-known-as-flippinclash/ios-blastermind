@@ -59,10 +59,20 @@ class GameEngine {
             println("Failed to parse match: <\(jsonParsingError)")
         } else if let actualMatch = matchDict,
             let me = actualMatch[meDictKey] as? NSDictionary,
+            let player = Player(json: me),
             let data = actualMatch[dataDictKey] as? NSDictionary,
-            let player = Player(json: me) {
+            let match = Match(json: data)
+             {
+                println("Received player: <\(player)>, match: <\(match)>, name: <\(match.name)>")
                 localPlayer = player
-                println("Received player: <\(player)>, data: <\(data)>")
+                switch engineState {
+                case .Online(let client):
+                    client.watchMatch(match, callback: { (eventData) -> Void in
+                        println("engine got data: <\(eventData)>")
+                    })
+                case .Offline:
+                    break
+                }
         }
     }
 }

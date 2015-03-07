@@ -8,14 +8,24 @@
 
 import UIKit
 
+protocol ClientDelegate: class {
+    func receivedEvent(PTPusherEvent!)
+}
+
+let matchStartEvent = "match-started"
+let matchEndEvent = "match-ended"
+//let matchProgressEvent = "match-progress" // not using
+
 class Client: NSObject, PTPusherDelegate {
     lazy var client: PTPusher = {
         return PTPusher.pusherWithKey("a8dc613841aa8963a8a4", delegate: self) as! PTPusher
     }()
 
     var gameChannel: PTPusherChannel?
+    weak var delegate: ClientDelegate?
 
-    func startClient() {
+    // DEBUG:
+    func startClientDebug() {
         self.client.connect()
         let gameChannel = self.client.subscribeToChannelNamed("game-us")
         gameChannel.bindToEventNamed("match-started", handleWithBlock: {
@@ -24,10 +34,36 @@ class Client: NSObject, PTPusherDelegate {
         })
         self.gameChannel = gameChannel
     }
-
     func ping(event: PTPusherEvent) {
-        println("ping")
+        println("ping: <\(event)>")
     }
+
+    // Client Goodness
+
+    func watchMatch(match: Match, callback: PTPusherEventBlockHandler) {
+        self.client.connect()
+        let gameChannel = self.client.subscribeToChannelNamed(match.channel)
+        gameChannel?.bindToEventNamed(matchStartEvent, handleWithBlock: {
+            eventData in
+            self.ping(eventData)
+            self.sendToDelegate(eventData)
+        })
+        gameChannel?.bindToEventNamed(matchEndEvent, handleWithBlock: {
+            eventData in
+            self.ping(eventData)
+            self.sendToDelegate(eventData)
+            gameChannel?.unsubscribe()
+//            self.gameChannel = nil
+            self.client.disconnect()
+        })
+    }
+
+    func sendToDelegate(eventData: PTPusherEvent!) {
+        if let watchWatcher = self.delegate {
+            watchWatcher.receivedEvent(eventData)
+        }
+    }
+
 }
 
 class ServerConnection {
@@ -40,11 +76,14 @@ class ServerConnection {
 
     func requestNewMatch(player: SuggestedPlayer, callback: (NSData)->() ) {
         let req = createMatchRequest(player)
+        println("<\(req.allHTTPHeaderFields)>, <\(req.HTTPBody)>")
         let matchTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
-            println("response: <\(response)")
+            println("response: <\(response)>, <\(error)>")
 
             if let actualData = data {
                 callback(actualData)
+            } else {
+                println("Error. Error!!!11: <\(error)>")
             }
         })
 
@@ -79,7 +118,7 @@ class ServerConnection {
     // MARK: URL Creation
     func fullURLForEndpoint(endpoint: String) -> NSURL? {
         // escaping? Who ever heard of it.
-        let fullString = baseString.stringByAppendingPathComponent(endpoint)
+        let fullString = baseString.stringByAppendingString("/\(endpoint)")
         let fullURL = NSURL(string: fullString)
         return fullURL
     }
