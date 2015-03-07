@@ -96,17 +96,17 @@ class BoardScene: SKScene {
 
         let top = CGRectGetMaxY(inBounds)
         let bottom = binHeight
-        let leadingX = inBounds.size.width / 4 // 1/4 width of board for key pegs, 3/4 for guess pegs
+        let leadingX = inBounds.size.width / 3 // 1/n width of board for key pegs,the rest for guess pegs
         let trailingX = inBounds.size.width
         let guessRowsHeight = top - bottom
         let guessRowsWidth = trailingX - leadingX
         let guessRowsRect = CGRect(x: leadingX, y: top, width: guessRowsWidth, height: guessRowsHeight)
 
         let rowHeight = guessRowsHeight/CGFloat(numRows)
-        let codePegY = top - (rowHeight * CGFloat(guessRow))
+        let codePegY = top - (rowHeight * CGFloat(guessRow)) + rowHeight/2.0
 
         // need space on the far edge
-        let codePegWidth = guessRowsWidth / CGFloat(layout.codeWidth + 1)
+        let codePegWidth = guessRowsWidth / CGFloat(layout.codeWidth)
         let codePegX = leadingX + (codePegWidth * CGFloat(selectedIndex - 1))
 
         return CGPoint(x: codePegX, y: codePegY)
@@ -119,7 +119,7 @@ class BoardScene: SKScene {
     }
 
     func yPositionForBinSegmentsWithWidth(width: CGFloat) -> CGFloat {
-        return width * 1/3 // 1/3 of segment height for spacing on either side
+        return (width * 1/3) + (width * 1/2) // 1/3 of segment height for spacing on either side
     }
 
     func binHeightForSquareSegmentsWithWidth(width: CGFloat) -> CGFloat {
