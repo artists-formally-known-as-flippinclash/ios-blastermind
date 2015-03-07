@@ -11,7 +11,11 @@ import UIKit
 import SpriteKit
 
 struct Guess {
-    var codeGuess: [Int]
+    var codeGuess: [GuessType]
+}
+
+enum GuessType: String {
+    case alpha = "alpha", beta = "beta", gamma = "gamma", delta = "delta", epsilon = "espilon", zeta = "zeta"
 }
 
 struct Feedback {

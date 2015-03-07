@@ -57,15 +57,16 @@ class GameScene: SKScene {
         }
     }
 
-    func startMatchCallback(Match) {
-        switchToBoard()
+    func startMatchCallback(match: Match) {
+        switchToBoardForMatch(match)
     }
 
-    func switchToBoard() {
+    func switchToBoardForMatch(match: Match) {
         let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
         boardScene.scaleMode = SKSceneScaleMode.ResizeFill
         boardScene.size = self.size
         boardScene.boardLayout = BoardLayout(boardSize: self.size) // SHIPIT dirty hack
+        boardScene.match = match
         let transition = SKTransition.doorsOpenVerticalWithDuration(1.0)
 
         self.view?.presentScene(boardScene, transition: transition)

@@ -27,6 +27,8 @@ let pegPrefix = "peg"
 let submitButtonName = "submitButton"
 
 class BoardScene: SKScene {
+    var match: Match! // Christian said so (kidding)
+
     var boardLayout: BoardLayout? // REALLY NOT SWIFTY
     var pegTypes: [PegType] = [] // not Swifty but SHIPIT
 
@@ -35,11 +37,10 @@ class BoardScene: SKScene {
 
     var currentRoundStatus = RoundStatus.Waiting
 
-    var submitGuessButton: SKNode = {
-        let button = SKNode()
-        let color = SKSpriteNode(color: UIColor.whiteColor(), size: CGSize(width: 80.0,height: 80.0))
-        button.addChild(color)
-        button.position = CGPoint(x: 50.0, y: 90.0)
+    var submitGuessButton: ButtonNode = {
+        let button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 60.0,height: 60.0))
+        button.text = "Submit"
+        button.position = CGPoint(x: 50.0, y: 100.0)
         button.name = submitButtonName
         return button
     }()
@@ -75,7 +76,16 @@ class BoardScene: SKScene {
             return aNewNode
         }
 
+        self.submitGuessButton.buttonCallback = sendGuess
         self.addChild(submitGuessButton)
+
+        // get match name on screen
+        let myLabel = SKLabelNode(fontNamed:"Avenir-Next")
+        myLabel.text = match.name;
+        myLabel.fontSize = 20;
+        myLabel.position = CGPoint(x: CGRectGetMidX(self.frame), y:CGRectGetMaxY(self.frame) - 20);
+
+        self.addChild(myLabel)
     }
 
     // MARK: Interact with Board for guesses
@@ -114,7 +124,7 @@ class BoardScene: SKScene {
     func positionForCodePeg(guessRow: Int, selectedIndex: Int, layout: BoardLayout, binHeight: CGFloat, inBounds: CGRect) -> CGPoint {
         let numRows = layout.maxGuesses
 
-        let top = CGRectGetMaxY(inBounds)
+        let top = CGRectGetMaxY(inBounds) - 30
         let bottom = binHeight
         let leadingX = inBounds.size.width / 3 // 1/n width of board for key pegs,the rest for guess pegs
         let trailingX = inBounds.size.width
@@ -173,6 +183,11 @@ class BoardScene: SKScene {
 
     // MARK: Guess Logic
 
+    func sendGuess() {
+        println("send in the guess!")
+        submitGuess(fakeGuess(), completion: { (Feedback) in })
+    }
+
     func submitGuess(guess: Guess, completion: Feedback -> ()) {
         completion(fakeFeedback())
         ++self.currentGuessRow
@@ -188,7 +203,7 @@ class BoardScene: SKScene {
 
     // MARK: Debug methods
     func fakeGuess() -> Guess {
-        return Guess(codeGuess: [0, 0, 1, 1])
+        return Guess(codeGuess: [GuessType.alpha,GuessType.alpha,GuessType.beta,GuessType.zeta])
     }
 
     func fakeFeedback() -> Feedback {
@@ -213,6 +228,21 @@ class PegNode : SKSpriteNode {
 
         }
 
+    }
+}
+
+class ButtonNode: SKSpriteNode {
+    var buttonCallback: (()->())?
+    var text: String?
+
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        for touch in touches as! Set<UITouch> {
+            var location = touch.locationInView(self.scene!.view)
+            if let touchedNode = self.nodeAtPoint(location) as? ButtonNode,
+            let actualButtonCallback = buttonCallback {
+                actualButtonCallback()
+            }
+        }
     }
 }
 
