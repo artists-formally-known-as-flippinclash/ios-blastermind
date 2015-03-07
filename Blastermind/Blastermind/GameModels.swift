@@ -35,6 +35,10 @@ enum RoundStatus {
 //    case A(PegTypeOption), B(PegTypeOption), C(PegTypeOption), D(PegTypeOption), E(PegTypeOption), F(PegTypeOption)
 //}
 
+// MARK: Player related
+let nameKey = "name"
+let idKey = "id"
+
 struct SuggestedPlayer {
     var name: String
 
@@ -43,13 +47,24 @@ struct SuggestedPlayer {
     }
 
     func asJSONDictionary() -> [String: [String: String]] { // soul dies a little
-        return ["player": ["name": name]] // and a little more
+        return ["player": [nameKey: name]] // and a little more
     }
 }
 
 struct Player {
     var name: String
     var id: Int
+}
+
+extension Player {
+    init?(json: NSDictionary) {
+        if let name = json[nameKey] as? String,
+        let id = json[idKey] as? Int {
+            self = Player(name: name, id: id)
+        } else {
+            return nil
+        }
+    }
 }
 
 struct Match {

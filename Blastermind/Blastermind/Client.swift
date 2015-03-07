@@ -38,11 +38,14 @@ class ServerConnection {
         return NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
     }()
 
-    func requestNewMatch(player: SuggestedPlayer, callback: ()->() ) {
+    func requestNewMatch(player: SuggestedPlayer, callback: (NSData)->() ) {
         let req = createMatchRequest(player)
         let matchTask = session.dataTaskWithRequest(req, completionHandler: { (data, response, error) -> Void in
             println("response: <\(response)")
-            callback()
+
+            if let actualData = data {
+                callback(actualData)
+            }
         })
 
         matchTask.resume()
