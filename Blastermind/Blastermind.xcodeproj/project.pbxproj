@@ -22,6 +22,7 @@
 		B8724F511AA9887000C5560A /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F501AA9887000C5560A /* GameModels.swift */; };
 		B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */; };
 		B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F058841AAA9A45007965BA /* GameEngine.swift */; };
+		B8F058871AAB31F1007965BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F058861AAB31F1007965BA /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		B8724F501AA9887000C5560A /* GameModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
 		B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardLayout.swift; sourceTree = "<group>"; };
 		B8F058841AAA9A45007965BA /* GameEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		B8F058861AAB31F1007965BA /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EC7CCB13DBCF8EB2443C3B9C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +130,7 @@
 				B8724F4E1AA96FA600C5560A /* BoardScene.swift */,
 				B8390C9D1AA8F3DF007A3111 /* GameViewController.swift */,
 				B8724F501AA9887000C5560A /* GameModels.swift */,
+				B8F058861AAB31F1007965BA /* Theme.swift */,
 				B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */,
 				B8390C9F1AA8F3DF007A3111 /* Main.storyboard */,
 				B8390CA21AA8F3DF007A3111 /* Images.xcassets */,
@@ -300,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8390C9C1AA8F3DF007A3111 /* GameScene.swift in Sources */,
+				B8F058871AAB31F1007965BA /* Theme.swift in Sources */,
 				B8724F511AA9887000C5560A /* GameModels.swift in Sources */,
 				B8390C9E1AA8F3DF007A3111 /* GameViewController.swift in Sources */,
 				B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */,
