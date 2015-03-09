@@ -25,6 +25,11 @@ let defaultColors = [1: UIColor.redColor(), 2: UIColor.orangeColor(),
 
 let pegPrefix = "peg"
 let submitButtonName = "submitButton"
+let quitButtonName = "quitButton"
+
+// layout magic numbers
+let leftButtonMargin: CGFloat = 50.0
+let topMargin: CGFloat = 30.0
 
 class BoardScene: SKScene {
     var match: Match! // Christian said so (kidding)
@@ -42,8 +47,16 @@ class BoardScene: SKScene {
     var submitGuessButton: ButtonNode = {
         let button = ButtonNode(color: UIColor.whiteColor(), size: CGSize(width: 60.0,height: 60.0))
         button.text = "Submit"
-        button.position = CGPoint(x: 50.0, y: 100.0)
+        button.position = CGPoint(x: leftButtonMargin, y: 100.0)
         button.name = submitButtonName
+        return button
+    }()
+
+    var quitToHomeButton: ButtonNode = {
+        let button = ButtonNode(color: UIColor.blackColor(), size: CGSize(width: 60.0, height: 40.0))
+        button.text = "Quit"
+        button.position = CGPoint(x: leftButtonMargin, y: 400.0) // TODO: factor this better
+        button.name = quitButtonName
         return button
     }()
 
@@ -82,6 +95,10 @@ class BoardScene: SKScene {
 
         self.submitGuessButton.buttonCallback = sendGuess
         self.addChild(submitGuessButton)
+
+        self.quitToHomeButton.buttonCallback = quitToMainScreen
+        self.quitToHomeButton.position = CGPoint(x: leftButtonMargin, y: topOfBoard(self.frame))
+        self.addChild(quitToHomeButton)
 
         // get match name on screen
         let myLabel = SKLabelNode(fontNamed:"Avenir-Next")
@@ -130,7 +147,7 @@ class BoardScene: SKScene {
     func positionForCodePeg(guessRow: Int, selectedIndex: Int, layout: BoardLayout, binHeight: CGFloat, inBounds: CGRect) -> CGPoint {
         let numRows = layout.maxGuesses
 
-        let top = CGRectGetMaxY(inBounds) - 30
+        let top = topOfBoard(inBounds)
         let bottom = binHeight
         let leadingX = inBounds.size.width / 3 // 1/n width of board for key pegs,the rest for guess pegs
         let trailingX = inBounds.size.width
@@ -146,6 +163,10 @@ class BoardScene: SKScene {
         let codePegX = leadingX + (codePegWidth * CGFloat(selectedIndex - 1))
 
         return CGPoint(x: codePegX, y: codePegY)
+    }
+
+    func topOfBoard(boardRect: CGRect) -> CGFloat {
+        return CGRectGetMaxY(boardRect) - topMargin
     }
 
     func positionForIndex(index: Int, segmentWidth: CGFloat) -> CGFloat {
@@ -231,6 +252,13 @@ class BoardScene: SKScene {
 
     func outOfGuesses(guessedRowCount: Int, maxRows: Int) -> Bool {
         return guessedRowCount < maxRows
+    }
+
+    // MARK: App transitions
+
+    func quitToMainScreen() {
+        println("transition goes here")
+        // also make sure any server sessions are ended or quit, for now
     }
 
     // MARK: Debug methods
