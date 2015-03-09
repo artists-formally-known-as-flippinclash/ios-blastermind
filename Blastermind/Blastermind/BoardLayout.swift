@@ -45,5 +45,6 @@ struct PegType {
     var pegName: String
     var pegSize: CGSize
     var pegIndex: Int
+    var guessType: GuessType
     // node?
 }

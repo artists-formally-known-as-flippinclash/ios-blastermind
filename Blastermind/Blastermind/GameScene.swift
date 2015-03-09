@@ -36,10 +36,13 @@ class GameScene: SKScene {
         startLabel.fontColor = UIColor.blackColor()
         startLabel.position = CGPoint(x: 0.0, y: -10.0)
         startLabel.name = "startLabel"
-        startLabel.userInteractionEnabled = true // FIXME: label isn't handling touches right
+        startLabel.userInteractionEnabled = true // TODO: label isn't handling touches right
         startThingy.addChild(startLabel)
 
         self.addChild(startThingy)
+
+        // DEBUG:
+//        switchToBoard()
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -48,21 +51,35 @@ class GameScene: SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             let touchedNode = self.nodeAtPoint(location)
-//            if touchedNode.name == startButtonName || touchedNode.parent?.name == startButtonName {
-                // change scene
-            let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
-            boardScene.scaleMode = SKSceneScaleMode.ResizeFill
-            boardScene.size = self.size
-            boardScene.boardLayout = BoardLayout(boardSize: self.size) // SHIPIT dirty hack
-            let transition = SKTransition.doorsOpenVerticalWithDuration(1.0)
 
-            self.view?.presentScene(boardScene, transition: transition)
-//            }
-
+            let player = SuggestedPlayer(name: "bobo2")
+            appGameEngine().requestMatch(player, startMatchCallback: startMatchCallback)
         }
+    }
+
+    func startMatchCallback(match: Match) {
+        switchToBoardForMatch(match)
+    }
+
+    func switchToBoardForMatch(match: Match) {
+        let boardScene = BoardScene.unarchiveFromFile("BoardScene") as! BoardScene
+        boardScene.scaleMode = SKSceneScaleMode.ResizeFill
+        boardScene.size = self.size
+        boardScene.boardLayout = BoardLayout(boardSize: self.size) // SHIPIT dirty hack
+        boardScene.match = match
+        let transition = SKTransition.doorsOpenVerticalWithDuration(1.0)
+
+        self.view?.presentScene(boardScene, transition: transition)
+
     }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+
+    // dirty dirty gross
+    func appGameEngine() -> GameEngine! {
+        let app = UIApplication.sharedApplication().delegate as! AppDelegate
+        return app.engine
     }
 }

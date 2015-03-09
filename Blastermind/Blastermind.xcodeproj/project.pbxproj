@@ -16,11 +16,13 @@
 		B8390CA31AA8F3DF007A3111 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B8390CA21AA8F3DF007A3111 /* Images.xcassets */; };
 		B8390CA61AA8F3DF007A3111 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8390CA41AA8F3DF007A3111 /* LaunchScreen.xib */; };
 		B8390CB21AA8F3DF007A3111 /* BlastermindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8390CB11AA8F3DF007A3111 /* BlastermindTests.swift */; };
-		B8390CBC1AA90441007A3111 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8390CBB1AA90441007A3111 /* Server.swift */; };
+		B8390CBC1AA90441007A3111 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8390CBB1AA90441007A3111 /* Client.swift */; };
 		B8724F4D1AA96F3200C5560A /* BoardScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B8724F4C1AA96F3200C5560A /* BoardScene.sks */; };
 		B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F4E1AA96FA600C5560A /* BoardScene.swift */; };
 		B8724F511AA9887000C5560A /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8724F501AA9887000C5560A /* GameModels.swift */; };
 		B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */; };
+		B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F058841AAA9A45007965BA /* GameEngine.swift */; };
+		B8F058871AAB31F1007965BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F058861AAB31F1007965BA /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,12 +50,14 @@
 		B8390CAB1AA8F3DF007A3111 /* BlastermindTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlastermindTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8390CB01AA8F3DF007A3111 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8390CB11AA8F3DF007A3111 /* BlastermindTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlastermindTests.swift; sourceTree = "<group>"; };
-		B8390CBB1AA90441007A3111 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		B8390CBB1AA90441007A3111 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		B8724F4B1AA9175700C5560A /* Blastermind-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Blastermind-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8724F4C1AA96F3200C5560A /* BoardScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BoardScene.sks; sourceTree = "<group>"; };
 		B8724F4E1AA96FA600C5560A /* BoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardScene.swift; sourceTree = "<group>"; };
 		B8724F501AA9887000C5560A /* GameModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
 		B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardLayout.swift; sourceTree = "<group>"; };
+		B8F058841AAA9A45007965BA /* GameEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		B8F058861AAB31F1007965BA /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EC7CCB13DBCF8EB2443C3B9C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,7 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				B8390C971AA8F3DE007A3111 /* AppDelegate.swift */,
-				B8390CBB1AA90441007A3111 /* Server.swift */,
+				B8390CBB1AA90441007A3111 /* Client.swift */,
+				B8F058841AAA9A45007965BA /* GameEngine.swift */,
 				B8724F4B1AA9175700C5560A /* Blastermind-Bridging-Header.h */,
 				B8390C991AA8F3DF007A3111 /* GameScene.sks */,
 				B8390C9B1AA8F3DF007A3111 /* GameScene.swift */,
@@ -125,6 +130,7 @@
 				B8724F4E1AA96FA600C5560A /* BoardScene.swift */,
 				B8390C9D1AA8F3DF007A3111 /* GameViewController.swift */,
 				B8724F501AA9887000C5560A /* GameModels.swift */,
+				B8F058861AAB31F1007965BA /* Theme.swift */,
 				B8ED4D621AAA224000B7AB3E /* BoardLayout.swift */,
 				B8390C9F1AA8F3DF007A3111 /* Main.storyboard */,
 				B8390CA21AA8F3DF007A3111 /* Images.xcassets */,
@@ -297,11 +303,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8390C9C1AA8F3DF007A3111 /* GameScene.swift in Sources */,
+				B8F058871AAB31F1007965BA /* Theme.swift in Sources */,
 				B8724F511AA9887000C5560A /* GameModels.swift in Sources */,
 				B8390C9E1AA8F3DF007A3111 /* GameViewController.swift in Sources */,
+				B8F058851AAA9A45007965BA /* GameEngine.swift in Sources */,
 				B8724F4F1AA96FA600C5560A /* BoardScene.swift in Sources */,
 				B8ED4D631AAA224000B7AB3E /* BoardLayout.swift in Sources */,
-				B8390CBC1AA90441007A3111 /* Server.swift in Sources */,
+				B8390CBC1AA90441007A3111 /* Client.swift in Sources */,
 				B8390C981AA8F3DE007A3111 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,7 +441,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Blastermind/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blastermind/Blastermind-Bridging-Header.h";
@@ -446,7 +454,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Blastermind/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blastermind/Blastermind-Bridging-Header.h";
