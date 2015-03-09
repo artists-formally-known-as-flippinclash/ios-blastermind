@@ -170,3 +170,11 @@ extension Match {
 enum MatchState: String {
     case MatchMaking = "match_making", InProgress = "in_progress", finished = "finished"
 }
+
+// MARK: Debug
+
+extension Match {
+    static func fakeMatch() -> Match {
+        return Match(channel: "dummy-1", id: 1, name: "Bane of the Rekt", state: MatchState.InProgress)
+    }
+}

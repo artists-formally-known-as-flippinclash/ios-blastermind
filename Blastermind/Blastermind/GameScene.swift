@@ -42,7 +42,7 @@ class GameScene: SKScene {
         self.addChild(startThingy)
 
         // DEBUG:
-//        switchToBoard()
+        switchToBoardForMatch(Match.fakeMatch())
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
